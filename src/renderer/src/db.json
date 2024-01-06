@@ -1,0 +1,46 @@
+{
+    "direct_traversal": {
+        "desc": "Construct z path interpolating between anchor points",
+        "args": {
+            "positional arguments": {
+                "z": {
+                    "help": "Input z.pkl embeddings"
+                }
+            },
+            "optional arguments": {
+                "ind": {
+                    "help": "Text file containing indices of anchor points",
+                    "metavar": ".TXT",
+                    "flags": [
+                        "--ind"
+                    ]
+                },
+                "n": {
+                    "default": 6,
+                    "help": "Number of points in between anchors, inclusive (default: %(default)s)",
+                    "type": "int",
+                    "flags": [
+                        "-n"
+                    ]
+                },
+                "loop": {
+                    "const": true,
+                    "default": false,
+                    "help": "Loop to first point",
+                    "nargs": 0,
+                    "flags": [
+                        "--loop"
+                    ]
+                },
+                "o": {
+                    "help": "Output .txt file for z-values",
+                    "metavar": "Z.PATH.TXT",
+                    "type": "abspath",
+                    "flags": [
+                        "-o"
+                    ]
+                }
+            }
+        }
+    }
+}

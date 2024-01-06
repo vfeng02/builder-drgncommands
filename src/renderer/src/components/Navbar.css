@@ -1,0 +1,35 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    width: 100vw;
+    margin: 0 auto;
+    border-bottom: 1px solid #f2f2f2;
+    text-decoration: none;
+    color: #486AA8;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .navbar .links {
+    padding-left: 65vw;
+    padding-right: 30px;
+  }
+
+  .navbar .title {
+    padding-left: 50px;
+  }
+
+  .navbar a, .navbar h1 {
+    text-decoration: none;
+    color: #486AA8;
+
+    /* padding: 6px; */
+  }
+  .navbar a:hover, .navbar h1:hover {
+    color: black;
+  }
+
+  

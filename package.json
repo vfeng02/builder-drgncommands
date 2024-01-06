@@ -1,0 +1,55 @@
+{
+  "name": "drgncommands",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Generate commands for cryoDRGN",
+  "homepage": "https://github.com/vfeng02/drgncommands",
+  "license": "UNLICENSED",
+  "repository": "https://github.com/vfeng02/drgncommands",
+  "main": "./out/main/main.js",
+  "scripts": {
+    "dev": "electron-vite dev -w",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux --x64"
+  },
+  "author": "Vicky Feng",
+  "email": "vfeng02@gmail.com",
+  "build": {
+    "appId": "electron-drgncommands",
+    "dmg": {
+      "title": "${productName} ${version}"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "maintainer": "Vicky Feng"
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.1",
+    "@mui/material": "^5.15.1",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^1.0.29",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "json-loader": "^0.5.7",
+    "react": "^18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
+    "vite": "^4.4.5"
+  }
+}
