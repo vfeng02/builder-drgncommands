@@ -4,9 +4,16 @@ const path = require("node:path");
 const url = require("url");
 const fs = require("fs");
 const nodeChildProcess = require("child_process");
+const isDev = process.env.APP_DEV ? process.env.APP_DEV.trim() == "true" : false;
 let mainWindow;
-async function handleFileOpen() {
+async function handleFileSelect() {
   const { canceled, filePaths } = await dialog.showOpenDialog({});
+  if (!canceled) {
+    return filePaths[0];
+  }
+}
+async function handleDirSelect() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ["openDirectory"] });
   if (!canceled) {
     return filePaths[0];
   }
@@ -46,15 +53,19 @@ function createWindow() {
       // for other ways to access local filesystem, https://github.com/electron/electron/issues/23393#issuecomment-623694579
     }
   });
-  mainWindow.loadURL(url.format({
+  mainWindow.loadURL(isDev ? "http://localhost:5173/" : url.format({
     pathname: path.join(__dirname, "../renderer/index.html"),
     protocol: "file:",
     slashes: true
   }));
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
   mainWindow.on("closed", () => mainWindow = null);
 }
 app.whenReady().then(() => {
-  ipcMain.handle("dialog:openFile", handleFileOpen);
+  ipcMain.handle("dialog:selectFile", handleFileSelect);
+  ipcMain.handle("dialog:selectDir", handleDirSelect);
   ipcMain.handle("save-and-run", handleSaveAndRun);
   createWindow();
 });

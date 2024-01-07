@@ -1,0 +1,95 @@
+{
+    "required fields": {
+        "script name": {
+            "type": "text",
+            "help": "name the slurm script should be saved under"
+        },
+        "conda env": {
+            "type": "text",
+            "help": "anaconda3 environment (the environment should already be created)"
+        },
+        "dir": {
+            "type": "path",
+            "help": "directory the slurm script should be saved in"
+        }
+    },
+    "optional fields": {
+        "conda version": {
+            "type": "text",
+            "help": "anaconda3 version",
+            "default": "anaconda3/2023.9"
+        },
+        "shell": {
+            "flag": "",
+            "type": "text",
+            "help": "unix shell to be used",
+            "default": "!/bin/bash"
+        },
+        "job name": {
+            "flag": "--job-name",
+            "type": "text",
+            "help": "create a short name for your job",
+            "default": ""
+        },
+        "nodes": {
+            "flag": "--nodes",
+            "type": "number",
+            "help": "node count",
+            "default": 1
+        },
+        "tasks": {
+            "flag": "--ntasks",
+            "type": "number",
+            "help": "total number of tasks across all nodes",
+            "default": 1
+        },
+        "cpus per task": {
+            "flag": "--cpus-per-task",
+            "type": "number",
+            "help": "cpu-cores per task (>1 if multi-threaded tasks)",
+            "default": 1
+        },
+        "use gpu": {
+            "flag": "--gres=gpu:1",
+            "type": "toggle",
+            "help": "allocate a100 gpu for this task",
+            "default": false
+        },
+        "mem per cpu": {
+            "flag": "--mem-per-cpu",
+            "type": "text",
+            "help": "memory per cpu-core (4G is default)",
+            "default": "4G"
+        },
+        "time": {
+            "flag": "--time",
+            "type": "text",
+            "help": "total run time limit (HH:MM:SS)",
+            "default": "00:10:00"
+        },
+        "mail type begin": {
+            "flag": "--mail-type=begin",
+            "type": "toggle",
+            "help": "send email when job begins",
+            "default": true
+        },
+        "mail type end": {
+            "flag": "--mail-type=end",
+            "type": "toggle",
+            "help": "send email when job begins",
+            "default": true
+        },
+        "mail type fail": {
+            "flag": "--mail-type=fail",
+            "type": "toggle",
+            "help": "send email if job fails",
+            "default": true
+        },
+        "mail user": {
+            "flag": "--mail-user",
+            "type": "text",
+            "help": "user email address",
+            "default": "<YourNetID>@princeton.edu"
+        }
+    }
+}

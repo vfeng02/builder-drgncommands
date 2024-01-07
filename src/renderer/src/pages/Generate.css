@@ -51,7 +51,7 @@
     max-width: 800px;
 }
 
-.arguments input, .arguments textarea {
+.arguments input {
     width: 100%;
     padding: 6px 10px;
     margin: 10px 0;
@@ -112,22 +112,12 @@
     margin-bottom: 10px;
 }
 
-/* .arguments input.path-select {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-} */
-
-/* input[type=file] { */
-    /* display: none; */
-    /* border: none;
-    margin: auto;
-    text-align: center; */
-    /* color: transparent;  */
-/* } */
-/* input[type=file]::file-selector-button {
-    display: none;
-} */
+.slurm-link button {
+    margin: 15px;
+    background: white;
+    color: black;
+    border: 1px solid black;
+}
 
 input:focus::placeholder {
     color: transparent;

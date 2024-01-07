@@ -8,7 +8,7 @@
   "repository": "https://github.com/vfeng02/drgncommands",
   "main": "./out/main/main.js",
   "scripts": {
-    "dev": "electron-vite dev -w",
+    "dev": "APP_DEV=true electron-vite dev -w",
     "build": "electron-vite build",
     "start": "electron-vite preview",
     "dist": "electron-builder",

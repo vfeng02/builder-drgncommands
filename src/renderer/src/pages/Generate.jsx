@@ -14,37 +14,35 @@ const Generate = () => {
   const location = useLocation();
   const [command_name, command_args] = location.state?.fromCommand;
   const [generated, setGenerated] = useState("");
-  const [argValues, setArgValue] = useState({});
+  const [argValues, setArgValues] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
-  async function onOpenFile(argName) {
-    const filePath = await window.electronAPI.openFile();
-    setArgValue({
+  async function onSelectFile(argName) {
+    const filePath = await window.electronAPI.selectFile();
+    setArgValues({
       ...argValues,
       [argName]: filePath.toString(),
     });
   }
 
   function updateArg(e, argName, newValue) {
-    setArgValue({
+    setArgValues({
       ...argValues,
       [argName]: newValue,
     });
   }
 
   function updateChecked (argName, isChecked) {
-    setArgValue({
+    setArgValues({
       ...argValues,
       [argName]: isChecked ? true : false,
     });
   };
 
-  function generate(e) {
+  function generateCommand(e) {
     e.preventDefault();
-    var result = "cryodrgn " + command_name + " ";
-
-    // Object.entries(argValues).map((value) => (console.log(value)));
+    let result = "cryodrgn " + command_name + " ";
 
     for (const [_, args_in_group] of Object.entries(command_args)) {
       for (const [arg_name, arg_details] of Object.entries(args_in_group)) {
@@ -62,8 +60,8 @@ const Generate = () => {
           }
         }
         else if ("nargs" in arg_details && arg_details.nargs > 1) {
-          var multiple_values = ""
-          for (var i = 0; i < arg_details.nargs; i++) {
+          let multiple_values = ""
+          for (let i = 0; i < arg_details.nargs; i++) {
             // does not handle the case when one or multiple values are missing
             if ((arg_name+i) in argValues && argValues[(arg_name+i)] != null) {
               multiple_values += argValues[(arg_name+i)] + " "
@@ -87,14 +85,13 @@ const Generate = () => {
   }
 
   function renderInput(group, arg_name, arg_details) {
-    var type = "text";
-    var step = "";
-    var onWheel;
+    let type = "text";
+    let step = "";
+    let onWheel;
 
     if ("type" in arg_details) {
       // render directory selection and return 
       if (arg_details.type == "abspath") {
-        // type = "file";
         return (
           <div className="path-select">
             <input 
@@ -108,14 +105,9 @@ const Generate = () => {
             placeholder='Click to select path'
             key = {arg_name}
             readOnly
-            onClick={() => onOpenFile(arg_name)}
+            onClick={() => onSelectFile(arg_name)}
             />
-          {/* <label className="path-select-label" for={arg_name+"_file"}>{arg_name in argValues ? argValues[arg_name] : "Choose path"}</label> */}
-          {/* <button id="upload" onClick={onOpenFile}>Upload File</button> */}
           </div>
-          // <IconButton type='button' color='inherit' onClick={onOpenFile}>
-          //   <FileOpenIcon />
-          // </IconButton>
         )
       }
       else {
@@ -158,7 +150,6 @@ const Generate = () => {
           </Select>
         </div>
       )
-
     }
 
     // render multiple input selection
@@ -244,14 +235,14 @@ const Generate = () => {
         <div>
           <h2 style={(generated.length > 0) ? { top: "140px" } : { top: "60px" }}>{command_name}</h2>
           <div className="arguments">
-            <form onSubmit={e => generate(e)}>
+            <form onSubmit={e => generateCommand(e)}>
               <div className="accordion">
                 {Object.entries(command_args).map(([group, args]) => 
                   (<Accordion key={group} defaultExpanded={group == "positional arguments"}>
                       <AccordionSummary key={group + "_name"} expandIcon={<ExpandMoreIcon />}><strong>{group}</strong></AccordionSummary>
                       <AccordionDetails key={group + "_details"}>
                         {Object.entries(args).map(([arg_name, arg_details]) =>(
-                          <div>
+                          <div key={arg_name}>
                             <label>{arg_name}</label>
                             <Tooltip title={arg_details.help}>
                               <IconButton className="info-icon">
@@ -267,9 +258,11 @@ const Generate = () => {
               </div>
               <button type="submit">Generate Command</button>
             </form>
-            {/* <Link to={"/slurm"} state={{generatedCommand: generated}}>
-              <p>Run slurm script</p>
-            </Link> */}
+            <div className="slurm-link">
+              <Link to={"/slurm"} state={{generatedCommand: generated}}>
+                <button>Run Slurm Script</button>
+              </Link>
+            </div>
           </div>
         </div>
       ) : <Error errorMessage="Data for this command does not exist" />}
