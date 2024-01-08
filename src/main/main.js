@@ -24,7 +24,7 @@ async function handleDirSelect() {
 async function handleSaveAndRun(event, args) {
   const path = args[0];
   const content = args[1];
-  
+
   fs.writeFile(path, content, err => {
     if (err) {
         console.error(err);
@@ -32,7 +32,7 @@ async function handleSaveAndRun(event, args) {
   // file written successfully
   });
 
-  let script = nodeChildProcess.spawn('python', [path]);
+  let script = nodeChildProcess.spawn('sbatch', [path]);
 
   let output = "";
   let error = "";

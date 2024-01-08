@@ -89,12 +89,13 @@ const Slurm = () => {
         slurm_configs += "#SBATCH --job-name=" + values["job name"] + "\n \n";
         slurm_env += "conda activate " + values["conda env"] + "\n \n";
         
-        let slurm_script = slurm_configs + slurm_env + generatedCommand;
+        // let slurm_script = slurm_configs + slurm_env + generatedCommand;
+        let slurm_script = slurm_configs + slurm_env + "python hi.py > output.txt"; // script for testing on della
 
-        const test_script = "print('''" + slurm_script + "''')";
-        const path = values["dir"] + "/" + values["job name"] + ".py"; // change .py extension to .slurm
+        // const test_script = "print('''" + slurm_script + "''')";
+        const path = values["dir"] + "/" + values["job name"] + ".slurm"; // change .py extension to .slurm
 
-        const result = await window.electronAPI.saveAndRun([path, test_script]); // change test_script to slurmScript
+        const result = await window.electronAPI.saveAndRun([path, slurm_script]); // change test_script to slurmScript
         setRunOutput(result);
     };
 
