@@ -10,14 +10,9 @@ import { useLocation } from 'react-router-dom';
 
 const Slurm = () => {
     const location = useLocation();
-    const generated = location.state?.generatedCommand;
-    // const [shell, setShell] = useState("");
-    // const [condaVersion, setCondaVersion] = useState("");
-    // const [condaEnv, setCondaEnv] = useState("");
-    // const [dir, setDir] = useState("");
-    const [optionalValues, setOptionalValues] = useState({});
-    const [requiredValues, setRequiredValues] = useState({});
+    const generatedCommand = location.state?.generatedCommand;
     const [values, setValues] = useState({});
+    // const [slurmScript, setSlurmScript] = useState("");
     const [runOutput, setRunOutput] = useState("");
 
     async function onSelectDir(fieldName) {
@@ -48,7 +43,59 @@ const Slurm = () => {
         setRunOutput(result);
     };
 
-    function generateSlurm(e) {
+    async function generateSlurm(e) {
+        e.preventDefault();
+        let slurm_configs = "";
+        let slurm_env = "module purge \nmodule load ";
+
+        for (const [field_name, field_details] of Object.entries(fields["optional fields"])) {
+            if (field_name == "conda version") {
+                if (field_name in values) {
+                    slurm_env += values[field_name] + "\n"
+                }
+                else {
+                    slurm_env += field_details.default + "\n"
+                }
+            }
+            else if (field_name == "shell") {
+                if (field_name in values) {
+                    slurm_configs += "#" + values[field_name] + "\n"
+                }
+                else {
+                    slurm_configs += "#" + field_details.default + "\n"
+                }
+            }
+            else if (field_details.type == "toggle") {
+                if (field_name in values) { 
+                    if (values[field_name]) { // the config should be added
+                        slurm_configs += "#SBATCH " + field_details.flag + "\n"
+                    }
+                }
+                else if (field_details.default) {
+                    slurm_configs += "#SBATCH" + field_details.flag + "\n"
+                }
+            }
+            else {
+                if (field_name in values) {
+                    slurm_configs += "#SBATCH " + field_details.flag + "=" + values[field_name] + "\n"
+                }
+                else {
+                    if (field_name != "mail user") {
+                        slurm_configs += "#SBATCH " + field_details.flag + "=" + field_details.default + "\n"
+                    }
+                }
+            }
+        }
+        slurm_configs += "#SBATCH --job-name=" + values["job name"] + "\n \n";
+        slurm_env += "conda activate " + values["conda env"] + "\n \n";
+        
+        let slurm_script = slurm_configs + slurm_env + generatedCommand;
+
+        const test_script = "print('''" + slurm_script + "''')";
+        const path = values["dir"] + "/" + values["job name"] + ".py"; // change .py extension to .slurm
+
+        const result = await window.electronAPI.saveAndRun([path, test_script]); // change test_script to slurmScript
+        setRunOutput(result);
     };
 
     function updateField(fieldName, newValue) {
@@ -128,29 +175,31 @@ const Slurm = () => {
 
     return (
         <div className="slurm">
-            <p>{runOutput}</p>
+            {/* <p>{runOutput}</p> */}
             <h2>slurm job configurations</h2>
-            <div className='accordion'>
-                {Object.entries(fields).map(([group_name, group_fields]) => (
-                    <Accordion key={group_name+"_accordion"} defaultExpanded={group_name == "required fields"}>
-                        <AccordionSummary key={group_name + "_name"} expandIcon={<ExpandMoreIcon />}><strong>{group_name}</strong></AccordionSummary>
-                        <AccordionDetails key={group_name + "_details"}>
-                        {Object.entries(group_fields).map(([field_name, field_details]) =>(
-                            <div key={field_name} className="field">
-                            <label>{field_name}</label>
-                            <Tooltip title={field_details.help}>
-                                <IconButton className="info-icon">
-                                <InfoOutlinedIcon />
-                                </IconButton>
-                            </Tooltip>
-                            {renderField(group_name, field_name, field_details)}
-                            </div>
-                        ))}
-                        </AccordionDetails>
-                    </Accordion> 
-                ))}
-            </div>
-            <button className='run-button' onClick={saveAndRun}>Click to save and run script</button>
+            <form onSubmit={e => generateSlurm(e)}>
+                <div className='accordion'>
+                    {Object.entries(fields).map(([group_name, group_fields]) => (
+                        <Accordion key={group_name+"_accordion"} defaultExpanded={group_name == "required fields"}>
+                            <AccordionSummary key={group_name + "_name"} expandIcon={<ExpandMoreIcon />}><strong>{group_name}</strong></AccordionSummary>
+                            <AccordionDetails key={group_name + "_details"}>
+                            {Object.entries(group_fields).map(([field_name, field_details]) =>(
+                                <div key={field_name} className="field">
+                                <label>{field_name}</label>
+                                <Tooltip title={field_details.help}>
+                                    <IconButton className="info-icon">
+                                    <InfoOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                {renderField(group_name, field_name, field_details)}
+                                </div>
+                            ))}
+                            </AccordionDetails>
+                        </Accordion> 
+                    ))}
+                </div>
+                <button type="submit" className='run-button' onClick={(e) => generateSlurm(e)}>Save and run slurm script</button>
+            </form>
         </div>
     );
 

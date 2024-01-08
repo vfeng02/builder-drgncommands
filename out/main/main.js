@@ -21,6 +21,8 @@ async function handleDirSelect() {
 async function handleSaveAndRun(event, args) {
   const path2 = args[0];
   const content = args[1];
+  console.log("path received: " + path2);
+  console.log("content received: " + content);
   fs.writeFile(path2, content, (err) => {
     if (err) {
       console.error(err);
@@ -39,6 +41,7 @@ async function handleSaveAndRun(event, args) {
     error = err;
   });
   script.on("exit", (code) => {
+    console.log("error: " + code);
     exitCode = code;
   });
   return "stdout: " + output + "\nerror: " + error + "\nExit Code: " + exitCode;

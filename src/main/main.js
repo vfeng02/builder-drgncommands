@@ -24,6 +24,7 @@ async function handleDirSelect() {
 async function handleSaveAndRun(event, args) {
   const path = args[0];
   const content = args[1];
+  
   fs.writeFile(path, content, err => {
     if (err) {
         console.error(err);
@@ -49,6 +50,7 @@ async function handleSaveAndRun(event, args) {
   });
 
   script.on('exit', (code) => {
+    console.log('error: ' + code);
     exitCode = code;
   });
 

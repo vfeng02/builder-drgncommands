@@ -1,8 +1,8 @@
 {
     "required fields": {
-        "script name": {
+        "job name": {
             "type": "text",
-            "help": "name the slurm script should be saved under"
+            "help": "name that the job and slurm script will be saved under (do not include any extensions, e.g. .slurm)"
         },
         "conda env": {
             "type": "text",
@@ -24,12 +24,6 @@
             "type": "text",
             "help": "unix shell to be used",
             "default": "!/bin/bash"
-        },
-        "job name": {
-            "flag": "--job-name",
-            "type": "text",
-            "help": "create a short name for your job",
-            "default": ""
         },
         "nodes": {
             "flag": "--nodes",
@@ -71,19 +65,19 @@
             "flag": "--mail-type=begin",
             "type": "toggle",
             "help": "send email when job begins",
-            "default": true
+            "default": false
         },
         "mail type end": {
             "flag": "--mail-type=end",
             "type": "toggle",
             "help": "send email when job begins",
-            "default": true
+            "default": false
         },
         "mail type fail": {
             "flag": "--mail-type=fail",
             "type": "toggle",
             "help": "send email if job fails",
-            "default": true
+            "default": false
         },
         "mail user": {
             "flag": "--mail-user",
